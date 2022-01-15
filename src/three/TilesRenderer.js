@@ -434,9 +434,22 @@ export class TilesRenderer extends TilesRendererBase {
 		let box = null;
 		let boxTransform = null;
 		let boxTransformInverse = null;
-		if ( 'box' in tile.boundingVolume ) {
 
-			const data = tile.boundingVolume.box;
+        let boxData = null;
+
+		if ( 'box' in tile.boundingVolume ) {
+            boxData = tile.boundingVolume.box;
+        } else if ( 'sphere' in tile.boundingVolume) {
+            const sphereData = tile.boundingVolume.sphere;
+            const r = sphereData[3];
+            boxData = [ sphereData[0], sphereData[1], sphereData[2],
+                        r, 0, 0,
+                        0, r, 0,
+                        0, 0, r ];
+        }
+
+        if ( boxData != null ) {
+			const data = boxData;
 			box = new Box3();
 			boxTransform = new Matrix4();
 			boxTransformInverse = new Matrix4();
